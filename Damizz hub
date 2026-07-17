@@ -1,0 +1,169 @@
+# System.Key-npc-- Serviços do Roblox
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+-- Obter o jogador local
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Cores do Design
+local COLOR_BG = Color3.fromRGB(13, 15, 20)
+local COLOR_NEON_BLUE = Color3.fromRGB(0, 162, 255)
+local COLOR_DARK_GRAY = Color3.fromRGB(30, 32, 37)
+local COLOR_TEXT_BLUE = Color3.fromRGB(0, 180, 255)
+local COLOR_RED_X = Color3.fromRGB(220, 80, 100)
+local COLOR_ERROR = Color3.fromRGB(255, 60, 60)
+local COLOR_SUCCESS_GREEN = Color3.fromRGB(50, 255, 100)
+
+-- 1. Criando a ScreenGui principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "OYBHubOnly"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+-- 2. Criando o Painel OYB Hub (Já visível por padrão)
+local panelWidth = 360
+local panelHeight = 300
+
+local panel = Instance.new("Frame")
+panel.Name = "OYBPanel"
+panel.Size = UDim2.new(0, panelWidth, 0, panelHeight)
+panel.Position = UDim2.new(0.5, -panelWidth/2, 0.5, -panelHeight/2)
+panel.BackgroundColor3 = COLOR_BG
+panel.BackgroundTransparency = 0.05
+panel.Visible = true
+panel.Parent = screenGui
+
+local panelCorner = Instance.new("UICorner")
+panelCorner.CornerRadius = UDim.new(0, 22)
+panelCorner.Parent = panel
+
+-- Borda Neon
+local panelStroke = Instance.new("UIStroke")
+panelStroke.Thickness = 3
+panelStroke.Color = COLOR_NEON_BLUE
+panelStroke.Parent = panel
+
+-- Título e Botão X
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 50)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "SYSTEM KEY"
+titleLabel.TextColor3 = COLOR_TEXT_BLUE
+titleLabel.TextSize = 20
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Parent = panel
+
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 30, 0, 30)
+closeButton.Position = UDim2.new(1, -45, 0, 10)
+closeButton.BackgroundTransparency = 1
+closeButton.Text = "X"
+closeButton.TextColor3 = COLOR_RED_X
+closeButton.TextSize = 19
+closeButton.Font = Enum.Font.GothamBold
+closeButton.Parent = panel
+
+local subLabel = Instance.new("TextLabel")
+subLabel.Size = UDim2.new(1, 0, 0, 35)
+subLabel.Position = UDim2.new(0, 0, 0, 50)
+subLabel.BackgroundTransparency = 1
+subLabel.Text = "by Damizz Moon"
+subLabel.TextColor3 = COLOR_TEXT_BLUE
+subLabel.TextSize = 15
+subLabel.Font = Enum.Font.GothamBold
+subLabel.Parent = panel
+
+-- TextBox
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0.85, 0, 0, 45)
+textBox.Position = UDim2.new(0.075, 0, 0.42, 0)
+textBox.BackgroundColor3 = COLOR_DARK_GRAY
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textBox.PlaceholderText = "Enter Key..."
+textBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+textBox.Text = ""
+textBox.TextSize = 16
+textBox.Font = Enum.Font.GothamSemibold
+textBox.BorderSizePixel = 0
+textBox.Parent = panel
+
+local textBoxCorner = Instance.new("UICorner")
+textBoxCorner.CornerRadius = UDim.new(0, 10)
+textBoxCorner.Parent = textBox
+
+-- Botões
+local verifyButton = Instance.new("TextButton")
+verifyButton.Size = UDim2.new(0.4, 0, 0, 45)
+verifyButton.Position = UDim2.new(0.075, 0, 0.62, 0)
+verifyButton.BackgroundColor3 = COLOR_NEON_BLUE
+verifyButton.Text = "VERIFY"
+verifyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+verifyButton.TextSize = 16
+verifyButton.Font = Enum.Font.GothamBold
+verifyButton.BorderSizePixel = 0
+verifyButton.Parent = panel
+Instance.new("UICorner", verifyButton).CornerRadius = UDim.new(0, 10)
+
+local getKeyButton = Instance.new("TextButton")
+getKeyButton.Size = UDim2.new(0.4, 0, 0, 45)
+getKeyButton.Position = UDim2.new(0.525, 0, 0.62, 0)
+getKeyButton.BackgroundColor3 = COLOR_DARK_GRAY
+getKeyButton.Text = "GET KEY"
+getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+getKeyButton.TextSize = 16
+getKeyButton.Font = Enum.Font.GothamBold
+getKeyButton.BorderSizePixel = 0
+getKeyButton.Parent = panel
+Instance.new("UICorner", getKeyButton).CornerRadius = UDim.new(0, 10)
+
+-- Aviso
+local warningLabel = Instance.new("TextLabel")
+warningLabel.Size = UDim2.new(1, 0, 0, 25)
+warningLabel.Position = UDim2.new(0, 0, 0.82, 0)
+warningLabel.BackgroundTransparency = 1
+warningLabel.Text = ""
+warningLabel.TextColor3 = COLOR_ERROR
+warningLabel.TextSize = 12
+warningLabel.Font = Enum.Font.GothamSemibold
+warningLabel.Parent = panel
+
+-- Lógica do Botão de Fechar
+closeButton.MouseButton1Click:Connect(function()
+	panel.Visible = false
+end)
+
+-- Lógica do GET KEY
+getKeyButton.MouseButton1Click:Connect(function()
+	local linkToCopy = "https://pastebin.com/hZ1HDhns"
+	
+	if setclipboard then
+		setclipboard(linkToCopy)
+	elseif toclipboard then
+		toclipboard(linkToCopy)
+	end
+	
+	warningLabel.TextColor3 = COLOR_SUCCESS_GREEN
+	warningLabel.Text = "LINK COPIED!"
+	
+	task.wait(1.5)
+	warningLabel.Text = ""
+end)
+
+-- Lógica de Validação da Key e Execução do Script
+verifyButton.MouseButton1Click:Connect(function()
+	if textBox.Text == "YADAMIZZ v41" then
+		warningLabel.TextColor3 = COLOR_SUCCESS_GREEN
+		warningLabel.Text = "Correct key!"
+		
+		-- Executa o script automaticamente
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/betovenr-arch/Painel.npc/refs/heads/main/Damizz%20hub"))()
+		
+		task.wait(1)
+		screenGui:Destroy()
+	else
+		warningLabel.TextColor3 = COLOR_ERROR
+		warningLabel.Text = "Wrong key!"
+		textBox.Text = ""
+	end
+end)
